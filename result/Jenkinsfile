@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    tools{
+        nodejs 'node 18.4'
+    }
+    stages{
+        stage('build'){
+            when{
+                changeset "**/result/**"
+            }
+            steps{
+                echo "Compile the worker app"
+                dir ('result'){
+                    sh 'npm install'
+                }
+            }
+        }
+        stage('test'){
+            when{
+                changeset "**/result/**"
+            }
+            steps{
+                echo "package the worker app"
+                dir ('worker'){
+                    sh 'npm install'
+                    sh 'npm test'
+
+                }
+            }
+        }
+    }
+
+    post{
+        always{
+            echo "Results pipeline completed"
+        }
+    }
+}
