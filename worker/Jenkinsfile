@@ -6,7 +6,7 @@ pipeline {
     stages{
         stage('build'){
             when{
-                changeset: "**/worker/**"
+                changeset "**/worker/**"
             }
             steps{
                 echo "Compile the worker app"
@@ -17,7 +17,7 @@ pipeline {
         }
         stage('test'){
             when{
-                changeset: "**/worker/**"
+                changeset "**/worker/**"
             }
             steps{
                 echo "Run Unit Tests on Worker app"
@@ -28,8 +28,8 @@ pipeline {
         }
         stage('package'){
             when{
-                branch: master
-                changeset: "**/worker/**"
+                branch master
+                changeset "**/worker/**"
             }
             steps{
                 echo "package the worker app"
