@@ -1,0 +1,51 @@
+pipeline {
+    agent{
+        docker{
+            image 'python:2.7.16-slim'
+            args '--user root'
+        }
+    }
+    stages{
+        stage('build'){
+            when{
+                changeset "**/vote/**"
+            }
+            steps{
+                echo "Compile the vote app"
+                dir ('vote'){
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+        stage('test'){
+            when{
+                changeset "**/vote/**"
+            }
+            steps{
+                echo "Run Unit Tests on vote app"
+                dir ('vote'){
+                    sh 'nosetests -v'
+                }
+            }
+        }
+        // stage('package'){
+        //     when{
+        //         branch 'master'
+        //         changeset "**/vote/**"
+        //     }
+        //     steps{
+        //         echo "package the vote app"
+        //         dir ('vote'){
+        //             sh 'mvn package -DskipTests'
+        //             archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+        //         }
+        //     }
+        // }
+    }
+
+    post{
+        always{
+            echo "build pipeline completed"
+        }
+    }
+}
