@@ -1,7 +1,9 @@
 pipeline {
-    agent any
-    tools{
-        nodejs 'node18.4'
+    agent{
+        docker{
+            image 'node:18.4.0-slim'
+            args '-v $HOME/.m2:/root/.m2'
+        }
     }
     stages{
         stage('build'){
