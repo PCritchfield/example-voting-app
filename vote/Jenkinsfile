@@ -1,12 +1,11 @@
 pipeline {
-    agent{
-        docker{
-            image 'python:2.7.16-slim'
-            args '--user root'
-        }
+    agent none
+    environment {
+        DOCKER_ID = "philjim"
+        DOCKER_PASSWORD = credentials('dockerlogin')
     }
     stages{
-        stage('build'){
+        stage('test'){
         agent{
                 docker{
                     image 'python:2.7.16-slim'
@@ -17,25 +16,9 @@ pipeline {
                 changeset "**/vote/**"
             }
             steps{
-                echo "Compile the vote app"
+                echo "Compile and test the vote app"
                 dir ('vote'){
                     sh 'pip install -r requirements.txt'
-                }
-            }
-        }
-        stage('test'){
-            agent{
-                docker{
-                    image 'python:2.7.16-slim'
-                    args '--user root'
-                }
-            }
-            when{
-                changeset "**/vote/**"
-            }
-            steps{
-                echo "Run Unit Tests on vote app"
-                dir ('vote'){
                     sh 'nosetests -v'
                 }
             }
