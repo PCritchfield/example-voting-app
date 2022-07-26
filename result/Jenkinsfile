@@ -44,7 +44,7 @@ pipeline {
         stage('docker-package'){
             agent any
             when{
-                // branch 'master'
+                branch 'master'
                 changeset "**/result/**"
             }
             steps{
@@ -54,6 +54,7 @@ pipeline {
                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
                        def resultImage = docker.build("philjim/result:${env.BUILD_ID}","./result")
                        resultImage.push()
+                       resultImage.push("latest")
                     }
                 }
             }

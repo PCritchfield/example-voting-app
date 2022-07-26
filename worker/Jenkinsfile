@@ -61,7 +61,7 @@ pipeline {
         stage('docker-package'){
             agent any
             when{
-                // branch 'master'
+                branch 'master'
                 changeset "**/worker/**"
             }
             steps{
@@ -71,6 +71,7 @@ pipeline {
                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
                        def workerImage = docker.build("philjim/worker:${env.BUILD_ID}","./worker")
                        workerImage.push()
+                       workerImage.push("latest")
                     }
                 }
             }
