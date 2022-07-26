@@ -34,7 +34,7 @@ pipeline {
                 script{
                     docker.withRegistry('https://index.docker.io/v1'){
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_ID --password-stdin'
-                        def resultImage = docker.build("philjim/vote:${env.BUILD_ID}","./vote")
+                        def voteImage = docker.build("philjim/vote:${env.BUILD_ID}","./vote")
                         voteImage.push()
                         voteImage.push("latest")
                     }
