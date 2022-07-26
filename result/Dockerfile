@@ -1,11 +1,11 @@
-FROM node:8.16.0-alpine
+FROM node:18.4.0-slim
 
 WORKDIR /app 
 
 COPY . . 
 
 RUN npm install  && \ 
-    npm audit fix 
+    npm audit fix --force
     
 EXPOSE 4000
 
