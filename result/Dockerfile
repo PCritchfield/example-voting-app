@@ -1,12 +1,18 @@
-FROM node:18.4.0-slim
+FROM node:8.9-alpine
 
-WORKDIR /app 
+RUN mkdir -p /app
+WORKDIR /app
 
-COPY . . 
+RUN npm install -g nodemon
+RUN npm config set registry https://registry.npmjs.org
+COPY package.json /app/package.json
+RUN npm install \
+ && npm ls \
+ && npm cache clean --force \
+ && mv /app/node_modules /node_modules
+COPY . /app
 
-RUN npm install  && \ 
-    npm audit fix --force
-    
-EXPOSE 4000
+ENV PORT 80
+EXPOSE 80
 
-CMD npm start 
+CMD ["node", "server.js"]

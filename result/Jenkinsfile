@@ -8,7 +8,7 @@ pipeline {
         stage('build'){
             agent{
                 docker{
-                    image 'node:18.4.0-slim'
+                    image 'node:8.9-alpine'
                     args '-v $HOME/.m2:/root/.m2'
                 }
             }
@@ -25,7 +25,7 @@ pipeline {
         stage('test'){
             agent{
                 docker{
-                    image 'node:18.4.0-slim'
+                    image 'node:8.9-alpine'
                     args '-v $HOME/.m2:/root/.m2'
                 }
             }
