@@ -1,37 +1,13 @@
-#!/bin/bash
-
-current=""
-next=""
+#!/bin/sh
 
 while ! timeout 1 bash -c "echo > /dev/tcp/vote/80"; do
     sleep 1
 done
 
-# add initial vote 
-curl -sS -X POST --data "vote=a" http://vote > /dev/null
-
-current=`phantomjs render.js "http://result:4000/" | grep -i vote | cut -d ">" -f 4 | cut -d " " -f1`
-next=`echo "$(($current + 1))"`
-
-  echo -e "\n\n-----------------"
-  echo -e "Current Votes Count: $current"
-  echo -e "-----------------\n"
-
-echo -e " I: Submitting one more vote...\n"
-
 curl -sS -X POST --data "vote=b" http://vote > /dev/null
-sleep 3
+sleep 10
 
-new=`phantomjs render.js "http://result:4000/" | grep -i vote | cut -d ">" -f 4 | cut -d " " -f1`
-
-
-  echo -e "\n\n-----------------"
-  echo -e "New Votes Count: $new"
-  echo -e "-----------------\n"
-
-echo -e "I: Checking if votes tally......\n"
-
-if [ "$next" -eq "$new" ]; then
+if phantomjs render.js http://result | grep -q '1 vote'; then
   echo -e "\\e[42m------------"
   echo -e "\\e[92mTests passed"
   echo -e "\\e[42m------------"
